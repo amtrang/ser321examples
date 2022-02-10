@@ -202,28 +202,28 @@ class WebServer {
           // a response that makes sense
 	  if (request.contains("num1") && request.contains("num2")) {
              query_pairs = splitQuery(request.replace("multiply?", ""));
-	     if () {
-               
-	     }
-	     Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-             Integer num2 = Integer.parseInt(query_pairs.get("num2"));
-//             if (num1 instanceof Integer && num2 instanceof Integer) {
+             // Learned NumberFormatException from
+             // https://www.javatpoint.com/numberformatexception-in-java#:~:text=Example-%20Integer.parseInt%20%28%22135%22%29%3B%20The%20maximum%20possible%20value%20of,the%20method%20which%20is%20being%20used%20for%20parsing.
+	     try {
+               Integer num1 = Integer.parseInt(query_pairs.get("num1"));
+               Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+
                Integer result = num1 * num2;
                builder.append("HTTP/1.1 200 OK\n");
                builder.append("Content-Type: text/html; charset=utf-8\n");
                builder.append("\n");
                builder.append("Result is: " + result);
-//	     } else {
-//               builder.append("HTTP/1.1 400 Invalid Syntax\n");
-//               builder.append("Content-Type: text/html; charset=utf-8\n");
-//               builder.append("\n");
-//               builder.append("Parameters are note Integers.");
-//             }
+             } catch (NumberFormatException nfe) {
+               builder.append("HTTP/1.1 400 Invalid Syntax\n");
+               builder.append("Content-Type: text/html; charset=utf-8\n");
+               builder.append("\n");
+               builder.append("Parameters are not Integers.");
+             }
 	  } else { 
              builder.append("HTTP/1.1 400 Invalid Syntax\n");
              builder.append("Content-Type: text/html; charset=utf-8\n");
              builder.append("\n");
-             builder.append("Parameters not given.");
+             builder.append("Parameters are not num1 & num2.");
           }
 
         } else if (request.contains("github?")) {
