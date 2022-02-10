@@ -201,10 +201,10 @@ class WebServer {
 	  // TODO: Include error handling here with a correct error code and
           // a response that makes sense
 	  if (request.contains("num1") && request.contains("num2")) {
-             query_pairs = splitQuery(request.replace("multiply?", ""));
              // Learned NumberFormatException from
              // https://www.javatpoint.com/numberformatexception-in-java#:~:text=Example-%20Integer.parseInt%20%28%22135%22%29%3B%20The%20maximum%20possible%20value%20of,the%20method%20which%20is%20being%20used%20for%20parsing.
 	     try {
+               query_pairs = splitQuery(request.replace("multiply?", ""));
                Integer num1 = Integer.parseInt(query_pairs.get("num1"));
                Integer num2 = Integer.parseInt(query_pairs.get("num2"));
 
