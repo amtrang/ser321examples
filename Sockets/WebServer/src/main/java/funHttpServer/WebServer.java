@@ -312,7 +312,7 @@ class WebServer {
 							builder.append("HTTP/1.1 200 OK\n");
 							builder.append("Content-Type: text/html; charset=utf-8\n");
 							builder.append("\n");
-							builder.append("The " + noun + " decides to " + verb + " very fast");
+							builder.append("The " + noun + " decides to " + verb + " very fast.");
 						} catch (StringIndexOutOfBoundsException ex) {
 							builder.append("HTTP/1.1 400 Invalid Syntax\n");
 							builder.append("Content-Type: text/html; charset=utf-8\n");
@@ -329,7 +329,7 @@ class WebServer {
 					Map<String, String> query_pairs = new LinkedHashMap<String, String>();
 					if (request.contains("min") && request.contains("max")) {
 						try {
-							query_pairs = splitQuery(request.replace("madlib?", ""));
+							query_pairs = splitQuery(request.replace("lines?", ""));
 							Integer min = Integer.parseInt(query_pairs.get("min"));
 							Integer max = Integer.parseInt(query_pairs.get("max"));
 							String lines = "";
