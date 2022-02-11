@@ -334,10 +334,6 @@ class WebServer {
 							Integer max = Integer.parseInt(query_pairs.get("max"));
 							String lines = "";
 							
-							builder.append("HTTP/1.1 200 OK\n");
-							builder.append("Content-Type: text/html; charset=utf-8\n");
-							builder.append("\n");
-							
 							if (min <= max) {
 								builder.append("HTTP/1.1 200 OK\n");
 								builder.append("Content-Type: text/html; charset=utf-8\n");
@@ -353,6 +349,11 @@ class WebServer {
 									lines += "|";
 								}
 								builder.append(lines);
+							} else if (min < 0 || max < 0) {
+								builder.append("HTTP/1.1 400 Invalid Syntax\n");
+								builder.append("Content-Type: text/html; charset=utf-8\n");
+								builder.append("\n");
+								builder.append("Min or max cannot be negative integers.");
 							} else {
 								builder.append("HTTP/1.1 400 Invalid Syntax\n");
 								builder.append("Content-Type: text/html; charset=utf-8\n");
