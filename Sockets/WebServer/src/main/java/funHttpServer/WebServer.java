@@ -253,7 +253,7 @@ class WebServer {
 					// amehlhase, 46384989 -> ser316examples
 					// amehlhase, 46384989 -> test316
 					if (request.contains("query")) {
-						try { // MAYBE CHECK /repos AT THE END OF THE GET REQUEST!!!!!!!!!!!!!!!!!!!!!
+						try {
 							query_pairs = splitQuery(request.replace("github?", ""));
 							String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
 
@@ -298,9 +298,84 @@ class WebServer {
 						builder.append("HTTP/1.1 400 Invalid Syntax\n");
 						builder.append("Content-Type: text/html; charset=utf-8\n");
 						builder.append("\n");
-						builder.append("Parameter is not query");
+						builder.append("Parameter is not query.");
 					}
 
+				} else if (request.contains("madlib?")) {
+					Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+					if (request.contains("noun") && request.contains("verb")) {
+						try {
+							query_pairs = splitQuery(request.replace("madlib?", ""));
+							String noun = query_pairs.get("noun");
+							String verb = query_pairs.get("verb");
+							
+							builder.append("HTTP/1.1 200 OK\n");
+							builder.append("Content-Type: text/html; charset=utf-8\n");
+							builder.append("\n");
+							builder.append("The " + noun + " decides to " + verb + " very fast");
+						} catch (StringIndexOutOfBoundsException ex) {
+							builder.append("HTTP/1.1 400 Invalid Syntax\n");
+							builder.append("Content-Type: text/html; charset=utf-8\n");
+							builder.append("\n");
+							builder.append("Parameters do not have anything.");
+						}
+					} else {
+						builder.append("HTTP/1.1 400 Invalid Syntax\n");
+						builder.append("Content-Type: text/html; charset=utf-8\n");
+						builder.append("\n");
+						builder.append("Parameters are not noun and verb.");
+					}
+				} else if (request.contains("lines?")) {
+					Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+					if (request.contains("min") && request.contains("max")) {
+						try {
+							query_pairs = splitQuery(request.replace("madlib?", ""));
+							Integer min = Integer.parseInt(query_pairs.get("min"));
+							Integer max = Integer.parseInt(query_pairs.get("max"));
+							String lines = "";
+							
+							builder.append("HTTP/1.1 200 OK\n");
+							builder.append("Content-Type: text/html; charset=utf-8\n");
+							builder.append("\n");
+							
+							if (min <= max) {
+								builder.append("HTTP/1.1 200 OK\n");
+								builder.append("Content-Type: text/html; charset=utf-8\n");
+								builder.append("\n");
+								// Learned to do random range here:
+								// https://www.baeldung.com/java-generating-random-numbers-in-range
+								int randomLines = 0;
+								for (int i = 0; i < 3; i++) {
+									randomLines = random.nextInt(max - min) + min;
+									for (int j = 0; j < randomLines; j++) {
+										lines += "_";
+									}
+									lines += "|";
+								}
+								builder.append(lines);
+							} else {
+								builder.append("HTTP/1.1 400 Invalid Syntax\n");
+								builder.append("Content-Type: text/html; charset=utf-8\n");
+								builder.append("\n");
+								builder.append("Max is less than min which should not be possible.");
+							}
+						} catch (StringIndexOutOfBoundsException ex) {
+							builder.append("HTTP/1.1 400 Invalid Syntax\n");
+							builder.append("Content-Type: text/html; charset=utf-8\n");
+							builder.append("\n");
+							builder.append("Parameters do not have anything.");
+						} catch (NumberFormatException ex) {
+							builder.append("HTTP/1.1 400 Invalid Syntax\n");
+							builder.append("Content-Type: text/html; charset=utf-8\n");
+							builder.append("\n");
+							builder.append("Parameters are not Integers.");
+						}
+					} else {
+						builder.append("HTTP/1.1 400 Invalid Syntax\n");
+						builder.append("Content-Type: text/html; charset=utf-8\n");
+						builder.append("\n");
+						builder.append("Parameters are not min and max.");
+					}
 				} else {
 					// if the request is not recognized at all
 
@@ -312,8 +387,9 @@ class WebServer {
 
 				// Output
 				response = builder.toString().getBytes();
-			}
-		} catch (IOException e) {
+			} 
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 			response = ("<html>ERROR: " + e.getMessage() + "</html>").getBytes();
 		}
