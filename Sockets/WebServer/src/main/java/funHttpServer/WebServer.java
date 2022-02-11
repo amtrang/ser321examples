@@ -264,20 +264,23 @@ class WebServer {
 								
 								String fullStr = "", nameStr = "", idStr = "", repoStr = "";
 								int begin = 0, stop = 0;
-						        begin = json.indexOf("\"full_name\": \"", begin + 1);
-						        stop = json.indexOf("/", stop + 1);
+						        begin = json.indexOf("full_name", begin + 1);
+						        stop = json.indexOf("/", begin + 1);
 						        while (begin != -1 && stop != -1) {
-						            nameStr = json.substring(begin + 14, stop);
+						            nameStr = json.substring(begin + 12, stop);
 						            begin = json.indexOf("/", begin + 1);
-						            stop = json.indexOf("\"", stop + 1);
+						            stop = json.indexOf("\"", begin + 1);
 						            repoStr = json.substring(begin + 1, stop);
 						            begin = json.indexOf("/u/", begin + 1);
-						            stop = json.indexOf("?", stop + 11);
+						            stop = json.indexOf("?", begin + 1);
 						            idStr = json.substring(begin + 3, stop);
-						            fullStr = nameStr+", "+idStr+" -> "+repoStr;
-						            builder.append(fullStr + "\n");
-						            begin = json.indexOf("\"full_name\": \"", begin + 1);
-						            stop = json.indexOf("/", stop + 1);
+						            fullStr = nameStr + ", " + idStr + " -> " + repoStr;
+						            builder.append(fullStr);
+							    // Learned how to separate lines here:
+							    // https://www.benchresources.net/how-to-append-new-line-to-stringbuffer-in-java/#:~:text=How%20to%20append%20new%20line%20to%20StringBuffer%20in,to%20escape%20back-slash%20%28%5C%29%20character%20More%20items...%20
+							    builder.append(System.getProperty("line.separator"));
+						            begin = json.indexOf("full_name", begin + 1);
+						            stop = json.indexOf("/", begin + 1);
 						        }
 							} else {
 								builder.append("HTTP/1.1 404 Not Found\n");
